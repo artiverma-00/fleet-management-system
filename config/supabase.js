@@ -1,8 +1,27 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+class SupabaseClient {
+  constructor() {
+    this.client = null;
+  }
 
-export default supabase;
+  get instance() {
+    if (!this.client) {
+      const url = process.env.SUPABASE_URL;
+      const key = process.env.SUPABASE_KEY;
+      
+      if (!url || !key) {
+        throw new Error("SUPABASE_URL and SUPABASE_KEY must be set in environment variables");
+      }
+      
+      this.client = createClient(url, key);
+    }
+    return this.client;
+  }
+
+  from(table) {
+    return this.instance.from(table);
+  }
+}
+
+export default new SupabaseClient();
