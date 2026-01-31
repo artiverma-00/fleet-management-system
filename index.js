@@ -1,17 +1,23 @@
-require("dotenv").config();
-const express = require("express");
-const app = express();
+import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
+import logger from "./middlewares/logger.midddleware.js";
+import notFound from "./middlewares/notFound.midddleware.js";
 
-const logger = require("./middlewares/logger.midddleware");
-const notFound = require("./middlewares/notFound.midddleware");
+const app = express();
 
 app.use(express.json());
 app.use(logger);
 
-app.use("/users", require("./routes/user.routes"));
-app.use("/vehicles", require("./routes/vehicle.routes"));
-app.use("/trips", require("./routes/trip.routes"));
-app.use("/analytics", require("./routes/analytics.routes"));
+import userRoutes from "./routes/user.routes.js";
+import vehicleRoutes from "./routes/vehicle.routes.js";
+import tripRoutes from "./routes/trip.routes.js";
+import analyticsRoutes from "./routes/analytics.routes.js";
+
+app.use("/users", userRoutes);
+app.use("/vehicles", vehicleRoutes);
+app.use("/trips", tripRoutes);
+app.use("/analytics", analyticsRoutes);
 
 app.use(notFound);
 
